@@ -10,4 +10,9 @@ has all the main code and you can make your own shell or something else
   extension=gd     
   3.import in PHPMYADMIN MyBaseSQL.sql database  
   4.check config.php just in case  
-  5.WELL DONE
+  5.WELL DONE 
+  
+# donate me pls  
+BTC:bc1q4uypj3yn6harpyr28xr9v73qs73d45jxesuduh  
+ETH:0x68f833af8aBbA742e7A7224BeE3899EE547cE86b  
+TON:UQC5VVGS0j2uZ6z3pFtgVKuKoOQoIM2x7Dib9gQKiJkepiPG
