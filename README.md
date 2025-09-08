@@ -11,6 +11,9 @@ has all the main code and you can make your own shell or something else
   3.import in PHPMYADMIN MyBaseSQL.sql database  
   4.check config.php just in case  
   5.WELL DONE 
+
+# PS  
+just in case, create a folder uploads and inside it a folder thumbs (this is needed for images)
   
 # donate me pls  
 BTC:bc1q4uypj3yn6harpyr28xr9v73qs73d45jxesuduh  
