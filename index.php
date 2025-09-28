@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<!-- Объявление типа документа — это HTML5 -->
-<html lang="ru"> <!--указываем язык страницы как русский -->
+<!-- Declaring the document type as HTML5 -->
+<html lang="en"> <!-- Setting the page language to English -->
 
 <head>
-    <meta charset="UTF-8">  <!-- Кодировка страницы — UTF-8, чтобы корректно отображались русские символы -->
-    <title>Добро пожаловать на Имиджборд!</title> <!-- Заголовок вкладки браузера -->
+    <meta charset="UTF-8">  <!-- Page encoding UTF-8 for correct display of characters -->
+    <title>Welcome to the Imageboard!</title> <!-- Browser tab title -->
 </head>
 
 <body>
-    <!-- Основное содержимое страницы -->
+    <!-- Main content of the page -->
 
-    <h1>Добро пожаловать на Имиджборд!</h1>
-    <!-- Главный заголовок страницы -->
+    <h1>Welcome to the Imageboard!</h1>
+    <!-- Main heading of the page -->
 
-    <p>Выберите борду:</p>
+    <p>Choose a board:</p>
 
     <ul>
-        <!-- список с вариантами выбора -->
+        <!-- List of options -->
 
-        <li><a href="board.php?board=b">/b/ - Бред</a></li>
-        <!-- Первый пункт списка: ссылка на страницу board.php с параметром board=b -->
-        <!-- В зависимости от того на какую борду ведет ссылка нужно указать соответствуйщий параметр-->
+        <li><a href="board.php?board=pol">/pol/ - Politically Incorrect</a></li>
+        <!-- First list item: link to board.php with parameter board=pol -->
+        <!-- The parameter should correspond to the chosen board -->
 
-        <li><a href="board.php?board=ph">/ph/ - Философия</a></li>
-        <!-- Второй пункт списка: ссылка на board.php с параметром board=ph -->
+        <li><a href="board.php?board=ph">/ph/ - Philosophy</a></li>
+        <!-- Second list item: link to board.php with parameter board=ph -->
     </ul>
 </body>
 
