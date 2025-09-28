@@ -9,13 +9,12 @@ has all the main code and you can make your own shell or something else
 ```
 ;extension=gd  
 extension=gd
-```     
-3.Import in PHPMYADMIN MyBaseSQL.sql database  
-4.Change the parameters in config.php  
-5.WELL DONE 
+```    
+3.Just in case, create a folder uploads and inside it a folder thumbs (this is needed for images)  
+4.Import in PHPMYADMIN MyBaseSQL.sql database  
+5.Change the parameters in config.php  
+6.WELL DONE 
 
-# PS  
-just in case, create a folder uploads and inside it a folder thumbs (this is needed for images)
   
 # donate me pls  
 BTC:bc1q4uypj3yn6harpyr28xr9v73qs73d45jxesuduh  
