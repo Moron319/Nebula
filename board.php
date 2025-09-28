@@ -1,72 +1,71 @@
 <?php
-// Подключаем файл конфигурации, где обычно лежит подключение к базе данных и настройки
+// Include the configuration file, usually contains DB connection and settings
 include 'config.php';
 
-// Получаем из URL параметр 'board' — идентификатор доски (борда), с которой работаем
-$board = $_GET['board']; 
+// Get 'board' parameter from URL — the board identifier we're working with
+$board = $_GET['board'];
 
-// Инициализируем переменную с названием борда
+// Initialize the board title variable
 $board_title = '';
 
-// Определяем название борда по его коду. Если не совпадает, прерываем работу скрипта с ошибкой
-if ($board == 'b') {
-    $board_title = '/b/';
+// Determine board title based on the code. If unknown, terminate script with error
+if ($board == 'pol') {
+    $board_title = '/pol/';
 } elseif ($board == 'ph') {
     $board_title = '/ph/';
 } else {
-    // Если борда не существует — прекращаем выполнение и выводим сообщение
-    die('Борда не существует');
+    // If board doesn't exist — stop execution and display message
+    die('Board does not exist');
 }
 
-// Готовим SQL-запрос для получения всех тредов с текущей борды, отсортированных по дате создания (новые сверху)
+// Prepare SQL query to get all threads from the current board, ordered by creation date (newest first)
 $stmt = $conn->prepare("SELECT * FROM threads WHERE board = :board ORDER BY created_at DESC");
-// Привязываем параметр :board к переменной $board, чтобы избежать SQL-инъекций
+// Bind :board parameter to $board variable to prevent SQL injection
 $stmt->bindParam(':board', $board);
-// Выполняем запрос
+// Execute query
 $stmt->execute();
-// Получаем все записи в массив
+// Fetch all results as an array
 $threads = $stmt->fetchAll();
 
-// Проверяем, был ли отправлен POST-запрос (создание нового треда) и передан ли текст треда
+// Check if the request is POST (creating new thread) and if thread content is provided
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
-    // Получаем из формы текст и заголовок треда
+    // Get the content and title from the form
     $content = $_POST['content'];
     $title = $_POST['title'];
 
-    // Переменные для пути к загруженному файлу и миниатюре, изначально пустые
+    // Variables for media file and thumbnail paths, initially null
     $media_path = null;
     $thumb_path = null;
 
-    // Проверяем, был ли загружен файл и без ошибок
+    // Check if a file was uploaded without errors
     if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
-        // Каталог для загрузки файлов
+        // Directory to upload files
         $upload_dir = 'uploads/';
-        // Получаем имя файла без пути
+        // Get just the filename
         $file_name = basename($_FILES['file']['name']);
-        // Формируем уникальное имя файла для хранения, чтобы избежать конфликтов
+        // Create a unique filename to avoid conflicts
         $media_path = $upload_dir . uniqid(rand(), true) . '.' . pathinfo($file_name, PATHINFO_EXTENSION);
 
-        // Перемещаем временный загруженный файл в постоянную папку
+        // Move the uploaded file to the permanent directory
         move_uploaded_file($_FILES['file']['tmp_name'], $media_path);
 
-        // Определяем расширение файла в нижнем регистре
+        // Get file extension in lowercase
         $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
-        // Если это изображение — создаём миниатюру
+        // If image — create a thumbnail
         if (in_array($file_ext, ['jpg', 'jpeg', 'png', 'gif'])) {
-            // Уникальное имя для миниатюры
             $thumb_name = uniqid(rand(), true) . '.' . $file_ext;
             $thumb_path = 'uploads/thumbs/' . $thumb_name;
 
-            // Получаем исходные размеры изображения
+            // Get original image size
             list($width, $height) = getimagesize($media_path);
-            // Размер миниатюры (фишка фиксированного размера 350x350)
+            // Thumbnail size fixed at 350x350
             $thumb_width = 350;
             $thumb_height = 350;
 
             $image = false;
 
-            // Создаём изображение из файла в зависимости от формата
+            // Create image resource depending on file type
             if ($file_ext === 'jpg' || $file_ext === 'jpeg') {
                 $image = imagecreatefromjpeg($media_path);
             } elseif ($file_ext === 'png') {
@@ -75,12 +74,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
                 $image = imagecreatefromgif($media_path);
             }
 
-            // Если удалось загрузить изображение — создаём миниатюру
+            // If image resource loaded successfully — create thumbnail
             if ($image !== false) {
-                // Создаём пустое изображение нужного размера
                 $thumb = imagecreatetruecolor($thumb_width, $thumb_height);
 
-                // Для PNG и GIF устанавливаем прозрачность для миниатюры
+                // For PNG and GIF preserve transparency
                 if ($file_ext === 'png' || $file_ext === 'gif') {
                     imagealphablending($thumb, false);
                     imagesavealpha($thumb, true);
@@ -88,10 +86,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
                     imagefilledrectangle($thumb, 0, 0, $thumb_width, $thumb_height, $transparent);
                 }
 
-                // Копируем и изменяем размер исходного изображения в миниатюру
+                // Copy and resize original image into thumbnail
                 imagecopyresized($thumb, $image, 0, 0, 0, 0, $thumb_width, $thumb_height, $width, $height);
 
-                // Сохраняем миниатюру в зависимости от формата
+                // Save thumbnail depending on file type
                 if ($file_ext === 'jpg' || $file_ext === 'jpeg') {
                     imagejpeg($thumb, $thumb_path);
                 } elseif ($file_ext === 'png') {
@@ -100,85 +98,85 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
                     imagegif($thumb, $thumb_path);
                 }
 
-                // Освобождаем память
+                // Free memory
                 imagedestroy($thumb);
                 imagedestroy($image);
             }
         }
-        // Если это видео — создаём миниатюру с помощью ffmpeg
+        // If video — create thumbnail using ffmpeg
         elseif (in_array($file_ext, ['mp4', 'avi', 'mov'])) {
             $thumb_name = uniqid(rand(), true) . '.jpg';
             $thumb_path = 'uploads/thumbs/' . $thumb_name;
 
-            // Команда для ffmpeg: берем 1-й кадр через секунду и сохраняем как jpg
+            // ffmpeg command: take the first frame at 1 second and save as jpg
             $command = "ffmpeg -i $media_path -ss 00:00:01.000 -vframes 1 $thumb_path";
             exec($command);
         }
     }
 
-    // Вставляем новый тред в базу, включая пути к медиафайлу и миниатюре, если есть
+    // Insert new thread into database, including media and thumbnail paths if available
     $stmt = $conn->prepare("INSERT INTO threads (board, title, content, media_path, media_thumb_path) VALUES (:board, :title, :content, :media_path, :media_thumb_path)");
     $stmt->bindParam(':board', $board);
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':content', $content);
-    // media_path и media_thumb_path могут быть NULL, если файл не был загружен
+    // media_path and media_thumb_path can be NULL if no file uploaded
     $stmt->bindParam(':media_path', $media_path, PDO::PARAM_STR);
     $stmt->bindParam(':media_thumb_path', $thumb_path, PDO::PARAM_STR);
     $stmt->execute();
 
-    // После создания треда перенаправляем обратно на страницу борда
+    // After creating the thread, redirect back to the board page
     header("Location: board.php?board=" . $board);
     exit;
 }
 ?>
 
-<!-- Начало HTML страницы -->
+<!-- Start of HTML page -->
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- вывод названия борда в заголовок -->
-    <title><?php echo htmlspecialchars($board_title); ?> - Имиджборд</title>
+    <!-- Output board title in page title -->
+    <title><?php echo htmlspecialchars($board_title); ?> - Imageboard</title>
 </head>
 <body>
-    <!-- Ссылка назад к списку всех бордов -->
-	<a href="index.php">Назад к списку бордов</a>
-    <!-- Заголовок страницы с названием борда -->
-    <h1><?php echo htmlspecialchars($board_title); ?> <small>id борда: <?php echo $board; ?></small></h1>
+    <!-- Link back to board list -->
+    <a href="index.php">Back to boards list</a>
+    <!-- Page header with board title -->
+    <h1><?php echo htmlspecialchars($board_title); ?> <small>board ID: <?php echo $board; ?></small></h1>
     
-    <!-- Форма создания нового треда -->
-    <h2>Создать новый тред</h2>
+    <!-- Form to create new thread -->
+    <h2>Create a New Thread</h2>
     <form method="POST" enctype="multipart/form-data">
-        <!-- Поле для заголовка треда -->
-        <input type="text" name="title" placeholder="Заголовок треда" required><br><br>
-        <!-- Текстовое поле для содержимого треда -->
-        <textarea name="content" placeholder="Текст треда" rows="4" required></textarea><br><br>
-        <!-- Загрузка файла (картинка, видео, аудио и др.) -->
+        <!-- Thread title input -->
+        <input type="text" name="title" placeholder="Thread title" required><br><br>
+        <!-- Thread content textarea -->
+        <textarea name="content" placeholder="Thread content" rows="4" required></textarea><br><br>
+        <!-- File upload input -->
         <input type="file" name="file" accept="image/*,video/*,audio/*,application/*" required><br><br>
-        <!-- Скрытое поле с текущим бордом (для удобства) -->
+        <!-- Hidden field with current board for convenience -->
         <input type="hidden" name="board" value="<?php echo $board; ?>">
 
-        <button type="submit">Создать тред</button>
+        <button type="submit">Create Thread</button>
     </form>
 
-    <!-- Список существующих тредов -->
-    <h2>Треды</h2>
+    <!-- List of existing threads -->
+    <h2>Threads</h2>
     <ul>
         <?php foreach ($threads as $thread): ?>
             <li>
-                <!-- Ссылка на страницу треда с его заголовком -->
-                <strong><a href="thread.php?id=<?php echo $thread['id']; ?>&board=<?php echo $board; ?>"><?php echo $thread['title']; ?></a></strong><br>
-                <?php if (isset($thread['media_path'])): ?>
+                <!-- Link to thread page with its title -->
+                <strong><a href="thread.php?id=<?php echo $thread['id']; ?>&board=<?php echo $board; ?>"><?php echo htmlspecialchars($thread['title']); ?></a></strong><br>
+                <?php if (!empty($thread['media_path'])): ?>
                     <?php 
-                    // Определяем расширение медиафайла
+                    // Get media file extension
                     $ext = strtolower(pathinfo($thread['media_path'], PATHINFO_EXTENSION));
-                    // Если это изображение, показываем миниатюру с ссылкой на полный файл
+                    // If image, show thumbnail linking to full media
                     if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])): ?>
                         <br><a href='<?php echo $thread['media_path']; ?>' target='_blank'>
-                            <img src='<?php echo $thread['media_thumb_path']; ?>' width='350' height='350' alt='<?php echo $thread['media_path']; ?>'>
+                            <img src='<?php echo $thread['media_thumb_path']; ?>' width='350' height='350' alt='<?php echo htmlspecialchars($thread['media_path']); ?>'>
                         </a>
                     <?php 
-                    // Если это видео, показываем видеоплеер
+                    // If video, show video player with link
                     elseif (in_array($ext, ['mp4', 'avi', 'mov'])): ?>
                         <br><a href='<?php echo $thread['media_path']; ?>' target='_blank'>
                             <video width='350' height='350' controls>
@@ -186,17 +184,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
                             </video>
                         </a>
                     <?php 
-                    // Если это аудио — аудиоплеер и ссылка на скачивание
+                    // If audio, show audio player and download link
                     elseif (in_array($ext, ['mp3', 'wav', 'ogg'])): ?>
                         <br><audio controls>
                             <source src='<?php echo $thread['media_path']; ?>' type='audio/<?php echo $ext; ?>'>
-                            Ваш браузер не поддерживает аудиоэлемент.
+                            Your browser does not support the audio element.
                         </audio>
-                        <br><a href='<?php echo $thread['media_path']; ?>' download>Скачать аудио</a>
+                        <br><a href='<?php echo $thread['media_path']; ?>' download>Download audio</a>
                     <?php 
-                    // Для других файлов показываем просто ссылку на скачивание
+                    // For other files, show download link
                     else: ?>
-                        <br><a href='<?php echo $thread['media_path']; ?>' download>Скачать файл</a>
+                        <br><a href='<?php echo $thread['media_path']; ?>' download>Download file</a>
                     <?php endif; ?>
                 <?php endif; ?>
             </li>
