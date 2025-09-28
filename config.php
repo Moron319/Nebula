@@ -1,20 +1,19 @@
 <?php
-// Параметры подключения к базе данных
-$servername = "localhost"; // Имя сервера базы данных 
-$username = "root";        // Имя пользователя базы данных
-$password = "";            // Пароль пользователя базы данных (пустой, если не задан)
-$dbname = "mybasesql";     // Имя базы данных, к которой подключаемся
+// Database connection parameters
+$servername = "localhost"; // Database server name
+$username = "root";        // Database username
+$password = "";            // Database password (empty if not set)
+$dbname = "mybasesql";     // Name of the database to connect to
 
 try {
-    // Создаем новый объект PDO для подключения к MySQL с указанными параметрами
-    // Формат DSN: mysql:host=адрес_сервера;dbname=имя_базы_данных
+    // Create a new PDO instance to connect to MySQL with the specified parameters
+    // DSN format: mysql:host=server_address;dbname=database_name
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     
-    // Устанавливаем режим обработки ошибок — исключения (PDOException)
-    // Это удобно для отлова и обработки ошибок при работе с базой
+    // Set the error mode to Exception to handle errors effectively
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    // Если при подключении произошла ошибка — ловим исключение и выводим сообщение об ошибке
+    // Catch any connection errors and display the error message
     echo "Connection failed: " . $e->getMessage();
 }
 ?>
