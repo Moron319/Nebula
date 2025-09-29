@@ -4,13 +4,13 @@
 
 <head>
     <meta charset="UTF-8">  <!-- Page encoding UTF-8 for correct display of characters -->
-    <title>Welcome to the Imageboard!</title> <!-- Browser tab title -->
+    <title>Welcome to the Nebula!</title> <!-- Browser tab title -->
 </head>
 
 <body>
     <!-- Main content of the page -->
 
-    <h1>Welcome to the Imageboard!</h1>
+    <h1>Welcome to the Nebula!</h1>
     <!-- Main heading of the page -->
 
     <p>Choose a board:</p>
