@@ -146,7 +146,7 @@ function displayReplies($post, $replies, $op_ip_address) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($thread['title']); ?> - Imageboard</title>
+    <title><?php echo htmlspecialchars($thread['title']); ?> - Thread</title>
 </head>
 <body>
     <a href="board.php?board=<?php echo htmlspecialchars($board); ?>">Back to board</a>
