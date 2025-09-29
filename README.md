@@ -1,6 +1,6 @@
-# ImageBoard_engine
+# Nebula
 
-ImageBoard_engine is engine for creating imageboards it  
+Nebula is engine for creating imageboards it  
 has all the main code and you can make your own shell or something else
 
 # Setup
