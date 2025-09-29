@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
 <head>
     <meta charset="UTF-8">
     <!-- Output board title in page title -->
-    <title><?php echo htmlspecialchars($board_title); ?> - Boards</title>
+    <title><?php echo htmlspecialchars($board_title); ?> - Board</title>
 </head>
 <body>
     <!-- Link back to board list -->
