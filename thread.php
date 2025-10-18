@@ -146,6 +146,8 @@ function displayReplies($post, $replies, $op_ip_address) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data/icon.png" type="image/x-icon"> <!-- Set icon -->
+    <link rel="stylesheet" href="css/thread.css"> <!-- Connect CSS -->
     <title><?php echo htmlspecialchars($thread['title']); ?> - Thread</title>
 </head>
 <body>

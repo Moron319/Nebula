@@ -1,0 +1,68 @@
+/* 
+====================================
+  CSS EXPLAINED: HOW CSS WORKS
+====================================
+
+CSS (Cascading Style Sheets) is a stylesheet language used 
+to describe the presentation of an HTML document. 
+
+It allows you to control the layout, colors, fonts, spacing, 
+and overall look of a web page.
+
+------------------------------------
+  BASIC SYNTAX:
+------------------------------------
+
+A CSS rule consists of a selector and a declaration block:
+
+selector {
+    property: value;
+}
+
+Example:
+h1 {
+    color: blue;
+    font-size: 24px;
+}
+
+In this example, the selector is 'h1', and it will apply
+the given styles (blue color and 24px font size) to all <h1> elements.
+
+------------------------------------
+  CASCADE AND SPECIFICITY:
+------------------------------------
+
+If multiple rules apply to the same element, CSS uses 
+a system called the "cascade" to determine which styles win.
+
+More specific selectors override less specific ones.
+Inline styles override external or internal stylesheets.
+!important can override most other rules.
+
+------------------------------------
+  TYPES OF SELECTORS:
+------------------------------------
+
+- Element Selector (e.g. p, h1)
+- Class Selector (.className)
+- ID Selector (#idName)
+- Attribute Selector ([type="text"])
+- Pseudo-classes (:hover, :nth-child)
+- Pseudo-elements (::before, ::after)
+
+------------------------------------
+  RESPONSIVE DESIGN:
+------------------------------------
+
+CSS supports media queries that help create responsive layouts.
+
+Example:
+@media (max-width: 600px) {
+    body {
+        background-color: lightgray;
+    }
+}
+
+This rule applies only when the screen width is 600px or less.
+
+*/

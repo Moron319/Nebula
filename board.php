@@ -6,17 +6,28 @@ include 'config.php';
 $board = $_GET['board'];
 
 // Initialize the board title variable
+
+//$board_image and $board_description = ''; 
+//these are variables that are responsible for the photo and description on the board
+
 $board_title = '';
+//$board_image = '';
+//$board_description = '';
 
 // Determine board title based on the code. If unknown, terminate script with error
 if ($board == 'pol') {
     $board_title = '/pol/';
+    //$board_image = '';
+    //$board_description = '';
 } elseif ($board == 'ph') {
     $board_title = '/ph/';
+    //$board_image = '';
+    //$board_description = '';
 } else {
     // If board doesn't exist — stop execution and display message
     die('Board does not exist');
 }
+
 
 // Prepare SQL query to get all threads from the current board, ordered by creation date (newest first)
 $stmt = $conn->prepare("SELECT * FROM threads WHERE board = :board ORDER BY created_at DESC");
@@ -135,6 +146,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data/icon.png" type="image/x-icon"> <!-- Set icon -->
+    <link rel="stylesheet" href="css/board.css"> <!-- Connect CSS -->
     <!-- Output board title in page title -->
     <title><?php echo htmlspecialchars($board_title); ?> - Board</title>
 </head>
@@ -142,6 +155,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
     <!-- Link back to board list -->
     <a href="index.php">Back to boards list</a>
     <!-- Page header with board title -->
+
+    <?php if ($board_image): ?>
+        <div class="board-image" style="margin-bottom:20px;">
+            <img src="<?php echo htmlspecialchars($board_image); ?>" alt="Board image <?php echo htmlspecialchars($board_title); ?>" style="max-width:100%; height:auto;"><br><br>
+        <?php if ($board_description): ?>
+            <p style="margin-top:10px;"><?php echo $board_description; ?></p>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
     <h1><?php echo htmlspecialchars($board_title); ?> <small>board ID: <?php echo $board; ?></small></h1>
     
     <!-- Form to create new thread -->
