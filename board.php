@@ -156,14 +156,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['content'])) {
     <a href="index.php">Back to boards list</a>
     <!-- Page header with board title -->
 
-    <?php if ($board_image): ?>
+    <!--<?php if ($board_image): ?>
         <div class="board-image" style="margin-bottom:20px;">
             <img src="<?php echo htmlspecialchars($board_image); ?>" alt="Board image <?php echo htmlspecialchars($board_title); ?>" style="max-width:100%; height:auto;"><br><br>
         <?php if ($board_description): ?>
             <p style="margin-top:10px;"><?php echo $board_description; ?></p>
         <?php endif; ?>
     </div>
-    <?php endif; ?>
+    <?php endif; ?>-->
 
     <h1><?php echo htmlspecialchars($board_title); ?> <small>board ID: <?php echo $board; ?></small></h1>
     
